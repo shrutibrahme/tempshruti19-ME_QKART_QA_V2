@@ -1,7 +1,7 @@
 package QKART_SANITY_LOGIN.Module1;
 
 import java.util.List;
-
+import javax.xml.xpath.XPath;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -32,7 +32,18 @@ public class Checkout {
              * Click on the "Add new address" button, enter the addressString in the address
              * text box and click on the "ADD" button to save the address
              */
-            return false;
+            driver.findElement(By.id("add-new-btn")).click();
+            Thread.sleep(1000);
+            //driver.findElement(By.xpath("//div[@class = 'MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline css-1j3d9ys-MuiInputBase-root-MuiOutlinedInput-root']")).sendKeys(addresString);
+            driver.findElement(By.xpath("//textarea[@class = 'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input']")).sendKeys(addresString);
+
+            Thread.sleep(1000);
+            driver.findElement(By.xpath("//button[text() = 'Add']")).click();
+            Thread.sleep(1000);
+
+            //return driver.findElement(By.xpath("//p[text() = ' Delete ']")).isDisplayed(); no need
+            return true;
+            
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
             return false;
@@ -50,6 +61,17 @@ public class Checkout {
              * Iterate through all the address boxes to find the address box with matching
              * text, addressToSelect and click on it
              */
+            Thread.sleep(3000);
+            List<WebElement> listOfAddresses = driver.findElements(By.xpath("//div[@class = 'address-item not-selected MuiBox-root css-0']"));
+            for (WebElement findAddress : listOfAddresses) {
+                System.out.println(findAddress.getText());
+                if (findAddress.getText().contains(addressToSelect)) {
+                    System.out.println("Address found");
+                    findAddress.click();
+                    return findAddress.isSelected();
+                }
+            }
+
             System.out.println("Unable to find the given address");
             return false;
         } catch (Exception e) {
@@ -66,7 +88,12 @@ public class Checkout {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find the "PLACE ORDER" button and click on it
-            return false;
+
+            WebElement placeOrderButton = driver.findElement(By.xpath("//button[text() ='PLACE ORDER']"));
+
+            placeOrderButton.click();
+            
+            return true;
 
         } catch (Exception e) {
             System.out.println("Exception while clicking on PLACE ORDER: " + e.getMessage());
@@ -80,7 +107,14 @@ public class Checkout {
     public Boolean verifyInsufficientBalanceMessage() {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 07: MILESTONE 6
+            Thread.sleep(1000);
+            String errorMessage = driver.findElement(By.id("notistack-snackbar")).getText();
+            
+            if(errorMessage.equals("You do not have enough balance in your wallet for this purchase")){
+                return true;
+            }
             return false;
+
         } catch (Exception e) {
             System.out.println("Exception while verifying insufficient balance message: " + e.getMessage());
             return false;

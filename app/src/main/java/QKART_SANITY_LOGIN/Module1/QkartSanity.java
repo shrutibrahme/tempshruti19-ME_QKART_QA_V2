@@ -98,7 +98,8 @@ public class QkartSanity {
         registration.navigateToRegisterPage();
         status = registration.registerUser("testUser", "abc@123", true);
         logStatus("Test Step", "User Registration : ", status ? "PASS" : "FAIL");
-        if (!status) {
+
+        if (!status) {   //runs only when registration fails
             logStatus("End TestCase", "Test Case 2: Verify user Registration : ", status ? "PASS" : "FAIL");
             return false;
 
@@ -111,11 +112,22 @@ public class QkartSanity {
         // registered user's credentials
         registration.navigateToRegisterPage();
         status = registration.registerUser(lastGeneratedUserName, "abc@123", false);
+        String currentUrl = driver.getCurrentUrl();
 
         // If status is true, then registration succeeded, else registration has
         // failed. In this case registration failure means Success
-        logStatus("End TestCase", "Test Case 2: Verify user Registration : ", status ? "FAIL" : "PASS");
-        return !status;
+        
+       // if (driver.getCurrentUrl().equals(registration.url)) {
+        if(!status && currentUrl.endsWith("/register")){
+            logStatus("End TestCase", "Test Case 2: Verify user Registration : ", status ? "fail" : "pass");
+            return true;
+            
+        }else{
+            logStatus("End TestCase", "Test Case 2: Verify user Registration : ", status ? "PASS" : "FAIL");
+            return false;
+        }
+
+     
     }
 
     /*
@@ -154,8 +166,7 @@ public class QkartSanity {
             // Verify that all results contain the searched text
             String elementText = resultelement.getTitleofResult();
             if (!elementText.toUpperCase().contains("YONEX")) {
-                logStatus("TestCase 3", "Test Case Failure. Test Results contains un-expected values: " + elementText,
-                        "FAIL");
+                logStatus("TestCase 3", "Test Case Failure. Test Results contains un-expected values: " + elementText, "FAIL");
                 return false;
             }
         }
@@ -198,6 +209,7 @@ public class QkartSanity {
         Home homePage = new Home(driver);
         homePage.navigateToHome();
 
+
         Thread.sleep(5000);
 
         // Search for product and get card content element of search results
@@ -206,10 +218,14 @@ public class QkartSanity {
 
         // Create expected values
         List<String> expectedTableHeaders = Arrays.asList("Size", "UK/INDIA", "EU", "HEEL TO TOE");
-        List<List<String>> expectedTableBody = Arrays.asList(Arrays.asList("6", "6", "40", "9.8"),
-                Arrays.asList("7", "7", "41", "10.2"), Arrays.asList("8", "8", "42", "10.6"),
-                Arrays.asList("9", "9", "43", "11"), Arrays.asList("10", "10", "44", "11.5"),
-                Arrays.asList("11", "11", "45", "12.2"), Arrays.asList("12", "12", "46", "12.6"));
+        List<List<String>> expectedTableBody = Arrays.asList(
+            Arrays.asList("6", "6", "40", "9.8"),
+            Arrays.asList("7", "7", "41", "10.2"), 
+            Arrays.asList("8", "8", "42", "10.6"),
+            Arrays.asList("9", "9", "43", "11"), 
+            Arrays.asList("10", "10", "44", "11.5"),
+            Arrays.asList("11", "11", "45", "12.2"), 
+            Arrays.asList("12", "12", "46", "12.6"));
 
         // Verify size chart presence and content matching for each search result
         for (WebElement webElement : searchResults) {
@@ -331,11 +347,35 @@ public class QkartSanity {
 
         // TODO: Register a new user
 
+        registration.navigateToRegisterPage();
+        
+        status = registration.registerUser("shrutiUser", "Password", true);
+        if (!status) {
+            logStatus("TestCase 6 ", "Test Case Failure. Happy Flow Test Failed", "FAIL");
+        }
+
+        lastGeneratedUserName = registration.lastGeneratedUsername;
+
         // TODO: Login using the newly registed user
+        login.navigateToLoginPage();
+        
+        status = login.PerformLogin(lastGeneratedUserName, "Password");
+        if (!status) {
+            logStatus("Step Failure", "User Perform Login Failed", status ? "PASS" : "FAIL");
+            logStatus("End TestCase", "Test Case 6: Happy Flow Test Failed : ", status ? "PASS" : "FAIL");
+        }
+
+        homePage.navigateToHome();
 
         // TODO: Add "Xtend Smart Watch" to cart
+        status = homePage.searchForProduct("Xtend Smart Watch");
+        homePage.addProductToCart("Xtend Smart Watch");
+        
 
         // TODO: Add "Yarine Floor Lamp" to cart
+        status = homePage.searchForProduct("Yarine Floor Lamp");
+        homePage.addProductToCart("Yarine Floor Lamp");
+
 
         // update watch quantity to 2
         homePage.changeProductQuantityinCart("Xtend Smart Watch", 2);
@@ -450,50 +490,51 @@ public class QkartSanity {
             }
 
             System.out.println("");
-            // Execute Test Case 3
-            // totalTests += 1;
-            // status = TestCase03(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
 
-            // System.out.println("");
+            // Execute Test Case 3
+            totalTests += 1;
+            status = TestCase03(driver);
+            if (status) {
+            passedTests += 1;
+            }
+
+            System.out.println("");
 
             // Execute Test Case 4
-            // totalTests += 1;
-            // status = TestCase04(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
+            totalTests += 1;
+            status = TestCase04(driver);
+            if (status) {
+            passedTests += 1;
+            }
 
-            // System.out.println("");
+            System.out.println("");
 
             // Execute Test Case 5
-            // totalTests += 1;
-            // status = TestCase05(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
+            totalTests += 1;
+            status = TestCase05(driver);
+            if (status) {
+            passedTests += 1;
+            }
 
-            // System.out.println("");
+            System.out.println("");
 
             // Execute Test Case 6
-            // totalTests += 1;
-            // status = TestCase06(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
+            totalTests += 1;
+            status = TestCase06(driver);
+            if (status) {
+            passedTests += 1;
+            }
 
-            // System.out.println("");
+            System.out.println("");
 
             // Execute Test Case 7
-            // totalTests += 1;
-            // status = TestCase07(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
+            totalTests += 1;
+            status = TestCase07(driver);
+            if (status) {
+            passedTests += 1;
+            }
 
-            // System.out.println("");
+            System.out.println("");
 
 
         } catch (Exception e) {

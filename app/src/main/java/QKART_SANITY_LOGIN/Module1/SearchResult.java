@@ -26,6 +26,11 @@ public class SearchResult {
         // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
         // Find the element containing the title (product name) of the search result and
         // assign the extract title text to titleOfSearchResult
+
+        //titleOfSearchResult = parentElement.findElement(By.xpath("//p[text()= 'YONEX Smash Badminton Racquet']")).getText();
+        titleOfSearchResult = parentElement.findElement(By.xpath(".//p[contains(@class, 'MuiTypography-body1')][1]")).getText();
+
+
         return titleOfSearchResult;
     }
 
@@ -37,6 +42,9 @@ public class SearchResult {
 
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 04: MILESTONE 2
             // Find the link of size chart in the parentElement and click on it
+            WebElement sizeChartElement = parentElement.findElement(By.xpath("//button[text() = 'Size chart']"));
+            sizeChartElement.click();
+            Thread.sleep(1000);
             return true;
         } catch (Exception e) {
             System.out.println("Exception while opening Size chart: " + e.getMessage());
@@ -75,6 +83,12 @@ public class SearchResult {
              * the element is "SIZE CHART". If the text "SIZE CHART" matches for the
              * element, set status = true , else set to false
              */
+
+            WebElement sizeChartElement = parentElement.findElement(By.xpath("//button[text() = 'Size chart']"));
+            if (sizeChartElement.isDisplayed() && sizeChartElement.getText().toUpperCase().contains("SIZE CHART")) {
+                status = true;
+            } 
+
             return status;
         } catch (Exception e) {
             return status;
@@ -99,6 +113,52 @@ public class SearchResult {
              * Validate that the contents of expectedTableBody are present in the table body
              * in the same order
              */
+
+            WebElement tableElement = driver.findElement(By.xpath("//table[@aria-label = 'simple table' ]"));
+
+            List<WebElement> headerElements = driver.findElements(By.xpath("//table/thead/tr/th"));
+            int i = 0;
+            for (WebElement tHeadElement : headerElements) {
+                    String actualHeaderText = tHeadElement.getText().trim();
+                    String expectedHeaderText = expectedTableHeaders.get(i);
+                    if (!actualHeaderText.equals(expectedHeaderText)) {
+                        status = false;
+                       System.out.println("Header going false at : " + actualHeaderText + " expected: " + expectedHeaderText);
+                    }
+                i++;
+            }
+
+           // List<List<WebElement>> bodyElements = driver.findElements(By.xpath("//table/tbody/tr/td"));
+            List<WebElement> bodyElements = driver.findElements(By.xpath("//table/tbody/tr")); //all rows
+            for (int j = 0; j < bodyElements.size(); j++) {
+
+                WebElement actualBodyRows = bodyElements.get(j); //single row
+
+                List<String> expectedBodyRows = expectedTableBody.get(j); //single array
+
+                List<WebElement> cells = actualBodyRows.findElements(By.tagName("td")); //single string
+
+                if (cells.size() != expectedBodyRows.size()) {
+                    System.out.println("Column count mismatch in row " + j);
+                    return false;
+                }
+
+                for (int k = 0; k < cells.size() ; k++) {
+                    String actualCellValue = cells.get(k).getText().trim();
+                    String expectedCellValue= expectedBodyRows.get(k);
+
+                    if (!actualCellValue.equals(expectedCellValue)) {
+                        System.out.println("Mismatch found at row "+ j +" column "+ k);
+                        System.out.println("Expected: " + expectedCellValue + "but found: " + actualCellValue);
+                        return false;
+                    }
+                }         
+            }
+
+            // for (WebElement row : bodyElements) {
+            //     System.out.println("Row: " + row.getText());
+            // }
+        
             return status;
 
         } catch (Exception e) {
@@ -115,6 +175,11 @@ public class SearchResult {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 04: MILESTONE 2
             // If the size dropdown exists and is displayed return true, else return false
+            WebElement dropDown = driver.findElement(By.id("uncontrolled-native"));
+            if(dropDown.isDisplayed()){
+                status = true;
+            }
+
             return status;
         } catch (Exception e) {
             return status;
