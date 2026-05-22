@@ -32,6 +32,7 @@ public class Checkout {
              * Click on the "Add new address" button, enter the addressString in the address
              * text box and click on the "ADD" button to save the address
              */
+<<<<<<< ours
             driver.findElement(By.id("add-new-btn")).click();
             Thread.sleep(1000);
             //driver.findElement(By.xpath("//div[@class = 'MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline css-1j3d9ys-MuiInputBase-root-MuiOutlinedInput-root']")).sendKeys(addresString);
@@ -44,6 +45,9 @@ public class Checkout {
             //return driver.findElement(By.xpath("//p[text() = ' Delete ']")).isDisplayed(); no need
             return true;
             
+=======
+            return false;
+>>>>>>> theirs
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
             return false;
@@ -86,6 +90,7 @@ public class Checkout {
      */
     public Boolean placeOrder() {
         try {
+<<<<<<< ours
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find the "PLACE ORDER" button and click on it
 
@@ -94,6 +99,9 @@ public class Checkout {
             placeOrderButton.click();
             
             return true;
+=======
+            return false;
+>>>>>>> theirs
 
         } catch (Exception e) {
             System.out.println("Exception while clicking on PLACE ORDER: " + e.getMessage());
@@ -106,6 +114,7 @@ public class Checkout {
      */
     public Boolean verifyInsufficientBalanceMessage() {
         try {
+<<<<<<< ours
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 07: MILESTONE 6
             Thread.sleep(1000);
             String errorMessage = driver.findElement(By.id("notistack-snackbar")).getText();
@@ -115,6 +124,9 @@ public class Checkout {
             }
             return false;
 
+=======
+            return false;
+>>>>>>> theirs
         } catch (Exception e) {
             System.out.println("Exception while verifying insufficient balance message: " + e.getMessage());
             return false;

@@ -29,6 +29,7 @@ public class Home {
             WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
             logout_button.click();
 
+            // SLEEP_STMT_10: Wait for Logout to complete
             // Wait for Logout to Complete
             Thread.sleep(3000);
 
@@ -103,7 +104,6 @@ public class Home {
         }
     }
 
-
     /*
      * Return Boolean if add product to cart is successful
      */
@@ -118,6 +118,7 @@ public class Home {
              * 
              * Return true if these operations succeeds
              */
+<<<<<<< ours
             for (WebElement eachSearchResult : getSearchResults()) {
                 if(eachSearchResult.getText().contains(productName)){
                     System.out.println(eachSearchResult.getText());
@@ -129,6 +130,10 @@ public class Home {
             System.out.println("Unable to find the given product");
             return false;
 
+=======
+            System.out.println("Unable to find the given product");
+            return false;
+>>>>>>> theirs
         } catch (Exception e) {
             System.out.println("Exception while performing add to cart: " + e.getMessage());
             return false;
@@ -202,6 +207,7 @@ public class Home {
      * Return Boolean denoting the status of change quantity of product in cart
      * operation
      */
+<<<<<<< ours
     public Boolean   changeProductQuantityinCart(String productName, int quantity) {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 06: MILESTONE 5
@@ -242,6 +248,13 @@ public class Home {
                    }
                 }
             }
+=======
+    public Boolean changeProductQuantityinCart(String productName, int quantity) {
+        try {
+
+
+
+>>>>>>> theirs
 
             return false;
         } catch (Exception e) {
