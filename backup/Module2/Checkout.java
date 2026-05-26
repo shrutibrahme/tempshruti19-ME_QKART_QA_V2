@@ -36,14 +36,12 @@ public class Checkout {
             Thread.sleep(1000);
             //driver.findElement(By.xpath("//div[@class = 'MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline css-1j3d9ys-MuiInputBase-root-MuiOutlinedInput-root']")).sendKeys(addresString);
             driver.findElement(By.xpath("//textarea[@class = 'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input']")).sendKeys(addresString);
-            Thread.sleep(1000);
 
+            Thread.sleep(1000);
             driver.findElement(By.xpath("//button[text() = 'Add']")).click();
             Thread.sleep(1000);
 
             //return driver.findElement(By.xpath("//p[text() = ' Delete ']")).isDisplayed(); no need
-            WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-            webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class = 'address-item not-selected MuiBox-root css-0']")));
             return true;
             
         } catch (Exception e) {

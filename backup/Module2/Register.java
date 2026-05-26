@@ -62,17 +62,7 @@ public class Register {
         // Click the register now button
         register_now_button.click();
         // Wait for registration to complete
-        //Thread.sleep(3000);
-
-
-        // SLEEP_STMT_06: Wait for new user to get created in the backend
-
-        WebDriverWait webDriverWait = new WebDriverWait(driver, 3);
-        if (makeUsernameDynamic) {
-            webDriverWait.until(ExpectedConditions.urlContains("/login"));
-        } else {
-            webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("notistack-snackbar")));
-        }
+        Thread.sleep(3000);
 
 
         this.lastGeneratedUsername = test_data_username;
