@@ -38,14 +38,19 @@ public class Checkout {
             AddressBox.clear();
             AddressBox.sendKeys(addresString);
 
-            List<WebElement> buttons = driver.findElements(By.className("css-177pwqq"));
+            //List<WebElement> buttons = driver.findElements(By.className("css-177pwqq"));
+            List<WebElement> buttons = driver.findElements(By.xpath("//button[contains(@class, 'MuiButton')]"));
+
             for (WebElement button : buttons) {
                 if (button.getText().equals("ADD")) {
                     button.click();
                     WebDriverWait wait = new WebDriverWait(driver, 30);
+                    // wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(String.format(
+                    //         "//*[@class='MuiTypography-root MuiTypography-body1 css-yg30e6' and text()='%s']",
+                    //         addresString))));
                     wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(String.format(
-                            "//*[@class='MuiTypography-root MuiTypography-body1 css-yg30e6' and text()='%s']",
-                            addresString))));
+                                "//div[@class = 'address-item not-selected MuiBox-root css-0']//p[ text() = '%s']",
+                                addresString))));
                     return true;
                 }
             }
@@ -66,11 +71,12 @@ public class Checkout {
              * Iterate through all the address boxes to find the address box with matching
              * text, addressToSelect and click on it
              */
-            WebElement parentBox = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div[1]/div/div[1]"));
-            List<WebElement> allBoxes = parentBox.findElements(By.className("not-selected"));
+            WebElement parentBox = driver.findElement(By.xpath("//div[contains(@class , 'MuiGrid-item')][1]"));
+            //List<WebElement> allBoxes = parentBox.findElements(By.className("not-selected"));
+            List<WebElement> allBoxes = parentBox.findElements(By.xpath("//div[@class = 'address-item not-selected MuiBox-root css-0']"));
 
             for (WebElement box : allBoxes) {
-                if (box.findElement(By.className("css-yg30e6")).getText().replaceAll(" ", "")
+                if (box.findElement(By.tagName("p")).getText().replaceAll(" ", "")
                         .equals(addressToSelect.replaceAll(" ", ""))) {
                     box.findElement(By.tagName("input")).click();
                     return true;
@@ -92,7 +98,9 @@ public class Checkout {
     public Boolean placeOrder() {
         try {
             // Find the "PLACE ORDER" button and click on it
-            List<WebElement> elements = driver.findElementsByClassName("css-177pwqq");
+           
+           // List<WebElement> elements = driver.findElementsByClassName("css-177pwqq");
+            List<WebElement> elements = driver.findElements(By.xpath("//button[contains(@class, 'MuiButton')]"));
             for (WebElement element : elements) {
                 if (element.getText().equals("PLACE ORDER")) {
                     element.click();

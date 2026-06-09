@@ -178,7 +178,7 @@ public class QkartSanityV2 {
 
         // Search for product
         status = homePage.searchForProduct("Gesundheit");
-        if (status) {
+        if (!status) {
             logStatus("TestCase 3", "Test Case Failure. Invalid keyword returned results", "FAIL");
             return false;
         }
@@ -314,7 +314,7 @@ public class QkartSanityV2 {
         // Place the order
         checkoutPage.placeOrder();
 
-        WebDriverWait wait = new WebDriverWait(driver, 30);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.urlToBe("https://qkart-qa-web.labs.crio.do/thanks"));
 
         // Check if placing order redirected to the Thansk page

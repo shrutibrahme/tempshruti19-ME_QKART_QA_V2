@@ -26,11 +26,12 @@ public class Home {
     public Boolean PerformLogout() throws InterruptedException {
         try {
             // Find and click on the Logout Button
-            WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
+            //WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
+            WebElement logout_button = driver.findElement(By.xpath("//button[text() = 'Logout']"));
             logout_button.click();
 
             WebDriverWait wait = new WebDriverWait(driver, 30);
-            wait.until(ExpectedConditions.invisibilityOfElementWithText(By.className("css-1urhf6j"), "Logout"));
+            wait.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath("//button[text() = 'Logout']"), "Logout"));
 
             return true;
         } catch (Exception e) {
@@ -50,10 +51,16 @@ public class Home {
             WebElement searchBox = driver.findElement(By.xpath("//input[@name='search'][1]"));
             searchBox.clear();
             searchBox.sendKeys(product);
+
+            Thread.sleep(1500);
             // TODO: CRIO_TASK_MODULE_XPATH - M0 Fix broken Xpath
-            WebDriverWait wait = new WebDriverWait(driver,30);
-            wait.until(ExpectedConditions.or(ExpectedConditions.textToBePresentInElementLocated(By.className("css-yg30ev6"), product),
-            ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div[3]/div[1]/div[2]/div/h4"))));
+            WebDriverWait wait = new WebDriverWait(driver,10);
+            //wait.until(ExpectedConditions.or(ExpectedConditions.textToBePresentInElementLocated(By.className("css-yg30ev6"), product),
+            //ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"root\"]/div/div[3]/div[1]/div[2]/div/h4"))));
+
+            wait.until(ExpectedConditions.or(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text() , 'No products found')]")),
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'MuiCard-root')]"))));
             Thread.sleep(3000);
             return true;
         } catch (Exception e) {
@@ -71,7 +78,10 @@ public class Home {
         try {
             // Find all webelements corresponding to the card content section of each of
             // search results
-            searchResults = driver.findElementsByClassName("css-1qw96cp");
+           
+           // searchResults = driver.findElementsByClassName("css-1qw96cp");
+            searchResults = driver.findElements(By.xpath("//div[contains(@class, 'MuiCard-root')]"));
+
             return searchResults;
         } catch (Exception e) {
             System.out.println("There were no search results: " + e.getMessage());
@@ -88,7 +98,7 @@ public class Home {
         try {
             // Check the presence of "No products found" text in the web page. Assign status
             // = true if the element is *displayed* else set status = false
-            status = driver.findElementByXPath("//*[@id=\"root\"]/div/div/div[3]/div[1]/div[2]/div/h4").isDisplayed();
+            status = driver.findElement(By.xpath("//h4[contains(text() , 'No products found')]")).isDisplayed();
             return status;
         } catch (Exception e) {
             return status;
@@ -108,11 +118,19 @@ public class Home {
              * 
              * Return true if these operations succeeds
              */
-            List<WebElement> gridContent = driver.findElementsByClassName("css-sycj1h");
+           // List<WebElement> gridContent = driver.findElementsByClassName("css-sycj1h");
+           // List<WebElement> gridContent = driver.findElements(By.xpath("//div[contains(@class, 'css-zgtx0t')]"));  //wrong xpath used 
+            List<WebElement> gridContent = driver.findElements(By.xpath("//div[contains(@class, 'MuiCard-root')]"));
             for (WebElement cell : gridContent) {
-                if (productName.contains(cell.findElement(By.className("css-yg30e6")).getText())) {
-                    cell.findElement(By.tagName("button")).click();
+                //if (productName.contains(cell.findElement(By.className("css-yg30e6")).getText())) { //their solution
+               // if (cell.getText().contains(productName)) { //my attempt
 
+                if(productName.contains(cell.findElement(By.tagName("p")).getText())){  //my solution
+
+                    System.out.println(cell.getText());
+
+                    //cell.findElement(By.tagName("button")).click();
+                    cell.findElement(By.xpath("//button[text() = 'Add to cart']")).click();
                     WebDriverWait wait = new WebDriverWait(driver, 30);
                     wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
                             String.format("//*[@class='MuiBox-root css-1gjj37g']/div[1][text()='%s']", productName))));
@@ -136,7 +154,9 @@ public class Home {
         Boolean status = false;
         try {
             // Find and click on the the Checkout button
-            WebElement checkoutBtn = driver.findElement(By.className("checkout-btn"));
+            //WebElement checkoutBtn = driver.findElement(By.className("checkout-btn"));
+            WebElement checkoutBtn = driver.findElement(By.xpath("//button[text() = 'Checkout']"));
+
             checkoutBtn.click();
 
             status = true;
@@ -214,13 +234,16 @@ public class Home {
             // Iterate through expectedCartContents and check if item with matching product
             // name is present in the cart
 
-            WebElement cartParent = driver.findElement(By.className("cart"));
-            List<WebElement> cartContents = cartParent.findElements(By.className("css-zgtx0t"));
+            //WebElement cartParent = driver.findElement(By.className("cart"));
+            WebElement cartParent = driver.findElement(By.xpath("//div[contains(@class ,'cart MuiBox-root css-0')]"));
+
+            //List<WebElement> cartContents = cartParent.findElements(By.className("css-zgtx0t"));
+            List<WebElement> cartContents = cartParent.findElements(By.xpath("//div[contains(@class, 'css-zgtx0t')]"));
 
             ArrayList<String> actualCartContents = new ArrayList<String>() {
             };
             for (WebElement cartItem : cartContents) {
-                actualCartContents.add(cartItem.findElement(By.className("css-1gjj37g")).getText().split("\n")[0]);
+                actualCartContents.add(cartItem.findElement(By.xpath("//div[contains(@class, 'css-1gjj37g')]")).getText().split("\n")[0]);
             }
 
             for (String expected : expectedCartContents) {
